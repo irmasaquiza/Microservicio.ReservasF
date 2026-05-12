@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="Microservicio.ReservasF.Api/Microservicio.ReservasF.Api.csproj" />
+    <Project Path="Microservicio.ReservasF.Business/Microservicio.ReservasF.Business.csproj" />
+    <Project Path="Microservicio.ReservasF.DataAccess/Microservicio.ReservasF.DataAccess.csproj" />
+    <Project Path="Microservicio.ReservasF.DataManagement/Microservicio.ReservasF.DataManagement.csproj" />
+  </Folder>
+</Solution>
