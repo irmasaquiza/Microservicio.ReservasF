@@ -8,7 +8,6 @@ namespace Microservicio.ReservasF.DataAccess.Entities
         public int IdBoleto { get; set; }
 
         // Concurrencia
-        public byte[] RowVersion { get; set; } = null!;
 
         // Relaciones internas
         public int IdReserva { get; set; }

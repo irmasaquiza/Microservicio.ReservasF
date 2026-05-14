@@ -65,8 +65,6 @@ public static class FacturaDataMapper
             MotivoInhabilitacion =
                 entity.MotivoInhabilitacion,
 
-            RowVersion =
-                entity.RowVersion
         };
     }
 
@@ -130,8 +128,6 @@ public static class FacturaDataMapper
             MotivoInhabilitacion =
                 model.MotivoInhabilitacion,
 
-            RowVersion =
-                model.RowVersion
         };
     }
 

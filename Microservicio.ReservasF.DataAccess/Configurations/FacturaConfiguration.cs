@@ -124,9 +124,7 @@ namespace Microservicio.ReservasF.DataAccess.Configurations
                 .HasMaxLength(250);
 
             // Concurrency token PostgreSQL
-            builder.Property(e => e.RowVersion)
-                .HasColumnName("row_version")
-                .IsConcurrencyToken();
+
 
             // Índices
             builder.HasIndex(e => e.GuidFactura)

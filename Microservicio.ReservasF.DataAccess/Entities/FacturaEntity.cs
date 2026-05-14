@@ -57,8 +57,6 @@ namespace Microservicio.ReservasF.DataAccess.Entities
         public string? MotivoInhabilitacion { get; set; }
 
         // Concurrencia
-        public byte[] RowVersion { get; set; } = null!;
-
         // Relaciones internas
         public virtual ReservaEntity Reserva { get; set; } = null!;
 

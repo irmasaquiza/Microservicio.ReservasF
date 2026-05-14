@@ -15,7 +15,6 @@ public static class BoletoDataMapper
         return new BoletoDataModel
         {
             IdBoleto = entity.IdBoleto,
-            RowVersion = entity.RowVersion,
 
             IdReserva = entity.IdReserva,
             IdDetalle = entity.IdDetalle,
@@ -58,7 +57,6 @@ public static class BoletoDataMapper
         return new BoletoEntity
         {
             IdBoleto = model.IdBoleto,
-            RowVersion = model.RowVersion,
 
             IdReserva = model.IdReserva,
             IdDetalle = model.IdDetalle,

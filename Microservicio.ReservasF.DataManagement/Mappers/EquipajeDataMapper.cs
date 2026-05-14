@@ -15,7 +15,6 @@ public static class EquipajeDataMapper
         return new EquipajeDataModel
         {
             IdEquipaje = entity.IdEquipaje,
-            RowVersion = entity.RowVersion,
 
             IdBoleto = entity.IdBoleto,
 
@@ -69,7 +68,6 @@ public static class EquipajeDataMapper
         return new EquipajeEntity
         {
             IdEquipaje = model.IdEquipaje,
-            RowVersion = model.RowVersion,
 
             IdBoleto = model.IdBoleto,
 

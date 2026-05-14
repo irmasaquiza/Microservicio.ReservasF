@@ -70,8 +70,6 @@ namespace Microservicio.ReservasF.DataAccess.Entities
         public string? MotivoInhabilitacion { get; set; }
 
         // Concurrencia
-        public byte[] RowVersion { get; set; } = null!;
-
         // Relaciones INTERNAS
         public virtual ICollection<FacturaEntity> Facturas { get; set; }
             = new List<FacturaEntity>();

@@ -87,9 +87,6 @@ public static class ReservaDataMapper
             MotivoInhabilitacion =
                 entity.MotivoInhabilitacion,
 
-            RowVersion =
-                entity.RowVersion,
-
             Detalles = entity.Detalles
                 .Where(d => !d.EsEliminado)
                 .OrderBy(d => d.IdDetalle)
@@ -180,8 +177,6 @@ public static class ReservaDataMapper
             MotivoInhabilitacion =
                 model.MotivoInhabilitacion,
 
-            RowVersion =
-                model.RowVersion,
 
             Detalles = model.Detalles
                 .Select(ReservaDetalleDataMapper.ToEntity)

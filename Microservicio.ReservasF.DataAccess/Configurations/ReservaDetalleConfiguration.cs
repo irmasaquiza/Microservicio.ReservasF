@@ -22,9 +22,6 @@ namespace Microservicio.ReservasF.DataAccess.Configurations
                 .HasColumnName("id_detalle");
 
             // Concurrency token PostgreSQL
-            builder.Property(e => e.RowVersion)
-                .HasColumnName("row_version")
-                .IsConcurrencyToken();
 
             // FK interna
             builder.Property(e => e.IdReserva)

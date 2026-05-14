@@ -16,8 +16,6 @@ public static class ReservaDetalleDataMapper
         {
             IdDetalle = entity.IdDetalle,
 
-            RowVersion = entity.RowVersion,
-
             IdReserva = entity.IdReserva,
 
             IdPasajero = entity.IdPasajero,
@@ -61,8 +59,6 @@ public static class ReservaDetalleDataMapper
         return new ReservaDetalleEntity
         {
             IdDetalle = model.IdDetalle,
-
-            RowVersion = model.RowVersion,
 
             IdReserva = model.IdReserva,
 
