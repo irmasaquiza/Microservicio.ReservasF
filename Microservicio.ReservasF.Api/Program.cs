@@ -1,6 +1,6 @@
 using Microservicio.ReservasF.Api.Extensions;
 using Microservicio.ReservasF.Api.Middleware;
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
 
 // En local evitamos EventLog de Windows porque en este entorno rompe las requests
