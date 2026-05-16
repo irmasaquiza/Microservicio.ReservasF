@@ -3,19 +3,24 @@ using System.Net.Http.Json;
 using Microservicio.ReservasF.Business.Integrations;
 using Microservicio.ReservasF.Business.Integrations.Interfaces;
 
+
 namespace Microservicio.ReservasF.Api.Integrations;
+
+
 
 public class VueloIntegrationService : IVueloIntegrationService
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
-
+    private readonly IHttpContextAccessor _httpContextAccessor;
     public VueloIntegrationService(
         HttpClient httpClient,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IHttpContextAccessor httpContextAccessor)
     {
         _httpClient = httpClient;
         _configuration = configuration;
+        _httpContextAccessor = httpContextAccessor;
 
         var baseUrl = _configuration["Integrations:Vuelos:BaseUrl"];
 
@@ -29,9 +34,17 @@ public class VueloIntegrationService : IVueloIntegrationService
         int idVuelo,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetAsync(
-            $"api/v1/vuelos/{idVuelo}",
-            cancellationToken);
+        var token = _httpContextAccessor.HttpContext?
+            .Request.Headers["Authorization"]
+            .ToString().Replace("Bearer ", "");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"api/v1/vuelos/{idVuelo}");
+
+        if (!string.IsNullOrEmpty(token))
+            request.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _httpClient.SendAsync(request, cancellationToken);
 
         if (response.StatusCode == HttpStatusCode.NotFound)
             return null;
@@ -45,20 +58,32 @@ public class VueloIntegrationService : IVueloIntegrationService
     }
 
     public async Task<AsientoIntegrationDto?> ObtenerAsientoAsync(
+        int idVuelo,
         int idAsiento,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetAsync(
-            $"api/v1/asientos/{idAsiento}",
-            cancellationToken);
+        var token = _httpContextAccessor.HttpContext?
+            .Request.Headers["Authorization"]
+            .ToString().Replace("Bearer ", "");
+
+        var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"api/v1/vuelos/{idVuelo}/asientos/{idAsiento}");
+
+        if (!string.IsNullOrEmpty(token))
+            request.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _httpClient.SendAsync(request, cancellationToken);
 
         if (response.StatusCode == HttpStatusCode.NotFound)
             return null;
 
         response.EnsureSuccessStatusCode();
 
-        var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseIntegration<AsientoIntegrationDto>>(
-            cancellationToken: cancellationToken);
+        var apiResponse = await response.Content
+            .ReadFromJsonAsync<ApiResponseIntegration<AsientoIntegrationDto>>(
+                cancellationToken: cancellationToken);
 
         return apiResponse?.Data;
     }
@@ -106,10 +131,11 @@ public class VueloIntegrationService : IVueloIntegrationService
     }
 
     public async Task<bool> ExisteAsientoAsync(
+        int idVuelo,
         int idAsiento,
         CancellationToken cancellationToken = default)
     {
-        var asiento = await ObtenerAsientoAsync(idAsiento, cancellationToken);
+        var asiento = await ObtenerAsientoAsync(idVuelo, idAsiento, cancellationToken);
         return asiento != null;
     }
 
@@ -118,28 +144,31 @@ public class VueloIntegrationService : IVueloIntegrationService
         int idVuelo,
         CancellationToken cancellationToken = default)
     {
-        var asiento = await ObtenerAsientoAsync(idAsiento, cancellationToken);
-
-        return asiento != null
-            && asiento.IdVuelo == idVuelo;
+        var asiento = await ObtenerAsientoAsync(idVuelo, idAsiento, cancellationToken);
+        return asiento != null && asiento.IdVuelo == idVuelo;
     }
 
     public async Task MarcarAsientoNoDisponibleAsync(
+        int idVuelo,
         int idAsiento,
         string modificadoPorUsuario,
         CancellationToken cancellationToken = default)
     {
-        var request = new
-        {
-            disponible = false,
-            modificado_por_usuario = modificadoPorUsuario
-        };
+        var token = _httpContextAccessor.HttpContext?
+            .Request.Headers["Authorization"]
+            .ToString().Replace("Bearer ", "");
 
-        var response = await _httpClient.PatchAsJsonAsync(
-            $"api/v1/asientos/{idAsiento}/disponibilidad",
-            request,
-            cancellationToken);
+        var requestMessage = new HttpRequestMessage(
+            HttpMethod.Patch,
+            $"api/v1/vuelos/{idVuelo}/asientos/{idAsiento}");
 
+        if (!string.IsNullOrEmpty(token))
+            requestMessage.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        requestMessage.Content = JsonContent.Create(new { disponible = false });
+
+        var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 

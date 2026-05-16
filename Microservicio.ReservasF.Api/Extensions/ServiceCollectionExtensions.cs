@@ -22,8 +22,7 @@ public static class ServiceCollectionExtensions
         RegisterServicesByConvention(services, "Microservicio.ReservasF.DataManagement");
         RegisterServicesByConvention(services, "Microservicio.ReservasF.Business");
 
-        RegisterIntegrations(services);
-
+        RegisterIntegrations(services, configuration);
         return services;
     }
 
@@ -56,11 +55,27 @@ public static class ServiceCollectionExtensions
 
     }
 
-    private static void RegisterIntegrations(IServiceCollection services)
+    private static void RegisterIntegrations(
+        IServiceCollection services,
+        IConfiguration configuration)
     {
-        services.AddHttpClient<IAsientoIntegrationService, AsientoIntegrationService>();
-        services.AddHttpClient<IClienteIntegrationService, ClienteIntegrationService>();
-        services.AddHttpClient<IVueloIntegrationService, VueloIntegrationService>();
+        var clientesUrl = configuration["Integrations:Clientes:BaseUrl"]!;
+        var vuelosUrl = configuration["Integrations:Vuelos:BaseUrl"]!;
+
+        services.AddHttpClient<IClienteIntegrationService, ClienteIntegrationService>(client =>
+        {
+            client.BaseAddress = new Uri(clientesUrl);
+        });
+
+        services.AddHttpClient<IAsientoIntegrationService, AsientoIntegrationService>(client =>
+        {
+            client.BaseAddress = new Uri(vuelosUrl);
+        });
+
+        services.AddHttpClient<IVueloIntegrationService, VueloIntegrationService>(client =>
+        {
+            client.BaseAddress = new Uri(vuelosUrl);
+        });
     }
 
     private static void RegisterRepositoriesByConvention(

@@ -5,14 +5,17 @@ namespace Microservicio.ReservasF.Business.Integrations.Interfaces;
 public interface IAsientoIntegrationService
 {
     Task<AsientoIntegrationDto?> GetAsientoAsync(
+        int idVuelo,
         int idAsiento,
         CancellationToken cancellationToken = default);
 
     Task<bool> ExisteAsientoAsync(
+        int idVuelo,
         int idAsiento,
         CancellationToken cancellationToken = default);
 
     Task<bool> AsientoDisponibleAsync(
+        int idVuelo,
         int idAsiento,
         CancellationToken cancellationToken = default);
 
@@ -22,6 +25,7 @@ public interface IAsientoIntegrationService
         CancellationToken cancellationToken = default);
 
     Task MarcarAsientoNoDisponibleAsync(
+        int idVuelo,
         int idAsiento,
         string modificadoPorUsuario,
         CancellationToken cancellationToken = default);

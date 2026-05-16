@@ -45,6 +45,7 @@ public static class ReservaBusinessMapper
 
         return new ReservaDataModel
         {
+            CodigoReserva = $"RES-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString("N")[..8].ToUpperInvariant()}", // ✅ agregar
             IdCliente = dto.IdCliente,
             IdVuelo = dto.IdVuelo,
             FechaInicio = dto.FechaInicio ?? default,
@@ -53,8 +54,8 @@ public static class ReservaBusinessMapper
             ValorIva = valorIva,
             TotalReserva = total,
             OrigenCanalReserva = string.IsNullOrWhiteSpace(dto.OrigenCanalReserva)
-                ? "BOOKING"
-                : dto.OrigenCanalReserva,
+        ? "BOOKING"
+        : dto.OrigenCanalReserva,
             ContactoEmail = dto.ContactoEmail,
             ContactoTelefono = dto.ContactoTelefono,
             Observaciones = dto.Observaciones,

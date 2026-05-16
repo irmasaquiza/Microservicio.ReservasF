@@ -12,6 +12,9 @@ builder.Logging.AddDebug();
 // Controllers
 builder.Services.AddControllers();
 
+// 👇 AQUÍ puedes agregarlo (recomendado)
+builder.Services.AddHttpContextAccessor();
+
 // Versioning
 builder.Services.AddApiVersioningDocumentation();
 

@@ -99,7 +99,7 @@ public class BoletoService : IBoletoService
         if (!vueloValido)
             throw new BusinessException("No se puede emitir boleto para un vuelo cancelado o inactivo.");
 
-        var asientoExiste = await _vueloIntegrationService.ExisteAsientoAsync(request.IdAsiento);
+        var asientoExiste = await _vueloIntegrationService.ExisteAsientoAsync(request.IdVuelo, request.IdAsiento);
         if (!asientoExiste)
             throw new NotFoundException("El asiento indicado no existe.");
 

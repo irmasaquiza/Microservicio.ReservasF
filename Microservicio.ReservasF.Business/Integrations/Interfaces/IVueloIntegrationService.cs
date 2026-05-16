@@ -9,6 +9,7 @@ public interface IVueloIntegrationService
         CancellationToken cancellationToken = default);
 
     Task<AsientoIntegrationDto?> ObtenerAsientoAsync(
+        int idVuelo,
         int idAsiento,
         CancellationToken cancellationToken = default);
 
@@ -25,6 +26,7 @@ public interface IVueloIntegrationService
         CancellationToken cancellationToken = default);
 
     Task<bool> ExisteAsientoAsync(
+        int idVuelo,
         int idAsiento,
         CancellationToken cancellationToken = default);
 
@@ -34,6 +36,7 @@ public interface IVueloIntegrationService
         CancellationToken cancellationToken = default);
 
     Task MarcarAsientoNoDisponibleAsync(
+        int idVuelo,
         int idAsiento,
         string modificadoPorUsuario,
         CancellationToken cancellationToken = default);

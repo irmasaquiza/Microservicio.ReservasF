@@ -9,14 +9,16 @@ public class ClienteIntegrationService : IClienteIntegrationService
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public ClienteIntegrationService(
         HttpClient httpClient,
-        IConfiguration configuration)
+        IConfiguration configuration,
+    IHttpContextAccessor httpContextAccessor)
     {
         _httpClient = httpClient;
         _configuration = configuration;
-
+        _httpContextAccessor = httpContextAccessor;
         var baseUrl = _configuration["Integrations:Clientes:BaseUrl"];
 
         if (string.IsNullOrWhiteSpace(baseUrl))
@@ -29,9 +31,18 @@ public class ClienteIntegrationService : IClienteIntegrationService
         int idCliente,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetAsync(
-            $"api/v1/clientes/{idCliente}",
-            cancellationToken);
+        // ✅ Agregar el token del contexto HTTP
+        var token = _httpContextAccessor.HttpContext?
+            .Request.Headers["Authorization"]
+            .ToString().Replace("Bearer ", "");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"api/v1/clientes/{idCliente}");
+
+        if (!string.IsNullOrEmpty(token))
+            request.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _httpClient.SendAsync(request, cancellationToken);
 
         if (response.StatusCode == HttpStatusCode.NotFound)
             return null;
@@ -48,9 +59,17 @@ public class ClienteIntegrationService : IClienteIntegrationService
         int idPasajero,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetAsync(
-            $"api/v1/pasajeros/{idPasajero}",
-            cancellationToken);
+        var token = _httpContextAccessor.HttpContext?
+            .Request.Headers["Authorization"]
+            .ToString().Replace("Bearer ", "");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"api/v1/pasajeros/{idPasajero}");
+
+        if (!string.IsNullOrEmpty(token))
+            request.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _httpClient.SendAsync(request, cancellationToken);
 
         if (response.StatusCode == HttpStatusCode.NotFound)
             return null;

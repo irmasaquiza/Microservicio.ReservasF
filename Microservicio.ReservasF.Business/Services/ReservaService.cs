@@ -135,7 +135,7 @@ public class ReservaService : IReservaService
             if (!pasajeroPertenece)
                 throw new BusinessException($"El pasajero {detalle.IdPasajero} no pertenece al cliente indicado.");
 
-            var asiento = await _vueloIntegrationService.ObtenerAsientoAsync(detalle.IdAsiento);
+var asiento = await _vueloIntegrationService.ObtenerAsientoAsync(request.IdVuelo, detalle.IdAsiento);
             if (asiento == null)
                 throw new NotFoundException($"El asiento {detalle.IdAsiento} no existe.");
 
@@ -349,7 +349,7 @@ public class ReservaService : IReservaService
 
             foreach (var detalle in reserva.Detalles.Where(d => !d.EsEliminado))
             {
-                var asiento = await _vueloIntegrationService.ObtenerAsientoAsync(detalle.IdAsiento);
+                var asiento = await _vueloIntegrationService.ObtenerAsientoAsync(reserva.IdVuelo, detalle.IdAsiento);
 
                 if (asiento == null)
                     throw new NotFoundException($"El asiento {detalle.IdAsiento} no existe.");
@@ -366,8 +366,9 @@ public class ReservaService : IReservaService
                     throw new BusinessException($"El asiento {detalle.IdAsiento} ya no está disponible para completar el pago.");
 
                 await _vueloIntegrationService.MarcarAsientoNoDisponibleAsync(
-                    detalle.IdAsiento,
-                    modificadoPorUsuario);
+    reserva.IdVuelo,
+    detalle.IdAsiento,
+    modificadoPorUsuario);
 
                 await _boletoService.CreateAsync(new BoletoRequestDto
                 {
@@ -519,6 +520,7 @@ public class ReservaService : IReservaService
         {
             factura = await _facturaDataService.CreateAsync(new FacturaDataModel
             {
+                NumeroFactura = $"FAC-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString("N")[..8].ToUpperInvariant()}", // ✅ agregar
                 IdCliente = reserva.IdCliente,
                 IdReserva = reserva.IdReserva,
                 Subtotal = reserva.SubtotalReserva,
@@ -529,7 +531,7 @@ public class ReservaService : IReservaService
                 OrigenCanalFactura = reserva.OrigenCanalReserva,
                 CreadoPorUsuario = usuario,
                 ServicioOrigen = "VUELOS",
-                Estado = "APR",
+                Estado = "ABI",
                 EsEliminado = false
             });
 
