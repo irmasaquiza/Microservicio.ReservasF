@@ -128,8 +128,8 @@ public class BoletoService : IBoletoService
 
         var estadoFactura = factura.Estado.Trim().ToUpperInvariant();
 
-        if (estadoFactura != "APR")
-            throw new BusinessException("Solo se puede emitir boleto con factura aprobada (APR).");
+        if (estadoFactura != "APR" && estadoFactura != "ABI")
+            throw new BusinessException("Solo se puede emitir boleto con factura aprobada (APR) o abierta (ABI).");
 
         var existentes = await _boletoDataService.GetPagedAsync(new BoletoFiltroDataModel
         {

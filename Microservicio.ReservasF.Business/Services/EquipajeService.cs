@@ -155,8 +155,8 @@ public class EquipajeService : IEquipajeService
 
         var estadoFactura = factura.Estado.Trim().ToUpperInvariant();
 
-        if (estadoFactura != "APR")
-            throw new BusinessException("Solo se puede registrar equipaje cuando la factura está APR.");
+        if (estadoFactura != "APR" && estadoFactura != "ABI")
+            throw new BusinessException("Solo se puede registrar equipaje cuando la factura está APR o ABI.");
 
         if (rolDelToken == "CLIENTE")
         {

@@ -531,7 +531,7 @@ var asiento = await _vueloIntegrationService.ObtenerAsientoAsync(request.IdVuelo
                 OrigenCanalFactura = reserva.OrigenCanalReserva,
                 CreadoPorUsuario = usuario,
                 ServicioOrigen = "VUELOS",
-                Estado = "ABI",
+                Estado = "APR",
                 EsEliminado = false
             });
 
@@ -577,6 +577,7 @@ var asiento = await _vueloIntegrationService.ObtenerAsientoAsync(request.IdVuelo
             factura.Subtotal + factura.ValorIva + factura.CargoServicio,
             2,
             MidpointRounding.AwayFromZero);
+        factura.Estado = "APR";  // ✅ agregar esta línea
         factura.ModificadoPorUsuario = usuario;
         factura.FechaModificacionUtc = DateTime.UtcNow;
 

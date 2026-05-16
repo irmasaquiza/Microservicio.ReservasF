@@ -22,6 +22,7 @@ public static class BoletoBusinessMapper
     {
         return new BoletoDataModel
         {
+            CodigoBoleto = $"BOL-{Guid.NewGuid().ToString("N")[..12].ToUpperInvariant()}", // ✅ máximo 16 chars
             IdReserva = dto.IdReserva,
             IdDetalle = dto.IdDetalle,
             IdVuelo = dto.IdVuelo,
