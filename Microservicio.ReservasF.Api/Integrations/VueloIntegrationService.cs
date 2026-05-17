@@ -154,19 +154,12 @@ public class VueloIntegrationService : IVueloIntegrationService
         string modificadoPorUsuario,
         CancellationToken cancellationToken = default)
     {
-        var token = _httpContextAccessor.HttpContext?
-            .Request.Headers["Authorization"]
-            .ToString().Replace("Bearer ", "");
-
         var requestMessage = new HttpRequestMessage(
             HttpMethod.Patch,
-            $"api/v1/vuelos/{idVuelo}/asientos/{idAsiento}");
+            $"api/v1/internal/vuelos/{idVuelo}/asientos/{idAsiento}/bloquear");
 
-        if (!string.IsNullOrEmpty(token))
-            requestMessage.Headers.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-        requestMessage.Content = JsonContent.Create(new { disponible = false });
+        requestMessage.Content = new StringContent(
+            "{}", System.Text.Encoding.UTF8, "application/json");
 
         var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
         response.EnsureSuccessStatusCode();
